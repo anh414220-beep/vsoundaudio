@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171513">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="V Sound">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>V Sound Manager</title>
+<style>
+:root{--bg:#f5f2ed;--card:#fff;--ink:#171513;--muted:#77716a;--line:#e5dfd7;--accent:#b8874a;--green:#2f7653}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif;padding-bottom:30px}
+header{background:#171513;color:#fff;padding:calc(18px + env(safe-area-inset-top)) 18px 18px;position:sticky;top:0;z-index:5}
+.brand{font-size:22px;font-weight:800;letter-spacing:.3px}.sub{color:#c9c1b7;font-size:12px;margin-top:4px}
+main{max-width:900px;margin:auto;padding:16px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 3px 15px #00000008}.metric{font-size:25px;font-weight:800;margin-top:7px}.label{font-size:12px;color:var(--muted)}
+nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}.tab{border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px 8px;font-weight:700;font-size:13px}.tab.active{background:#171513;color:#fff}
+section{display:none}.active-section{display:block}.title{font-size:20px;font-weight:800;margin:8px 0 12px}
+button{border:0;border-radius:11px;padding:12px 15px;background:#171513;color:#fff;font-weight:700}.primary{background:var(--accent)}input,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:15px}.form{display:grid;gap:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.item{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:13px 0}.item:last-child{border:0}.badge{font-size:11px;padding:5px 8px;border-radius:20px;background:#eee8df}.ok{background:#e3f1e9;color:#276547}
+.install{margin-top:12px;background:#eee7dd;border-radius:14px;padding:13px;font-size:13px;line-height:1.5}.install b{display:block;margin-bottom:4px}
+.empty{color:var(--muted);padding:20px 0;text-align:center}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}nav{grid-template-columns:repeat(6,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="brand">V SOUND</div><div class="sub">V Sound Manager · Quản lý hàng hoá & bảo hành</div></header>
+<main>
+<div class="install"><b>📱 Cài như app trên iPhone</b>Nhấn <b>Chia sẻ → Thêm vào Màn hình chính</b>. Sau đó chỉ cần bấm icon V Sound để mở thẳng ứng dụng.</div>
+<nav id="tabs">
+<button class="tab active" data-tab="dashboard">Tổng quan</button><button class="tab" data-tab="inventory">Kho hàng</button><button class="tab" data-tab="import">Nhập hàng</button><button class="tab" data-tab="sales">Bán hàng</button><button class="tab" data-tab="warranty">Bảo hành</button><button class="tab" data-tab="customers">Khách</button>
+</nav>
+<section id="dashboard" class="active-section"><div class="title">Tổng quan</div><div class="grid"><div class="card"><div class="label">Đang trong kho</div><div class="metric" id="mStock">0</div></div><div class="card"><div class="label">Vốn hàng tồn</div><div class="metric" id="mCost">0đ</div></div><div class="card"><div class="label">Doanh thu</div><div class="metric" id="mRevenue">0đ</div></div><div class="card"><div class="label">Lợi nhuận gộp</div><div class="metric" id="mProfit">0đ</div></div></div></section>
+<section id="inventory"><div class="title">Kho hàng</div><div class="card"><input id="search" placeholder="Tìm model, serial, hãng..."><div id="list"></div></div></section>
+<section id="import"><div class="title">Nhập hàng</div><div class="card"><form class="form" id="importForm"><div class="row"><input id="brand" placeholder="Hãng" required><input id="model" placeholder="Model" required></div><input id="serial" placeholder="Serial" required><div class="row"><input id="cost" type="number" placeholder="Giá nhập" required><input id="price" type="number" placeholder="Giá bán dự kiến" required></div><div class="row"><input id="purchaseDate" type="date" required><input id="warrantyMonths" type="number" value="12" placeholder="BH (tháng)"></div><input id="supplier" placeholder="Nhà cung cấp"><button class="primary">Lưu hàng vào kho</button></form></div></section>
+<section id="sales"><div class="title">Bán hàng</div><div class="card"><form class="form" id="saleForm"><select id="saleProduct" required></select><div class="row"><input id="salePrice" type="number" placeholder="Giá bán thực tế" required><input id="saleDate" type="date" required></div><div class="row"><input id="customer" placeholder="Tên khách hàng"><input id="phone" placeholder="Số điện thoại"></div><button class="primary">Xác nhận bán</button></form></div></section>
+<section id="warranty"><div class="title">Bảo hành</div><div class="card"><div id="warrantyList"></div></div></section>
+<section id="customers"><div class="title">Khách hàng</div><div class="card"><div id="customerList"></div></div></section>
+</main>
+<script>
+const KEY='vsound_inventory_v1'; let data=JSON.parse(localStorage.getItem(KEY)||'[]');
+const money=n=>new Intl.NumberFormat('vi-VN').format(n||0)+'đ';
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(data));render()};
+const today=()=>new Date().toISOString().slice(0,10);
+document.getElementById('purchaseDate').value=today();document.getElementById('saleDate').value=today();
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('section').forEach(x=>x.classList.remove('active-section'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active-section');render()});
+document.getElementById('importForm').onsubmit=e=>{e.preventDefault();let serial=document.getElementById('serial').value.trim();if(data.some(x=>x.serial===serial))return alert('Serial này đã tồn tại.');data.push({id:Date.now(),brand:brand.value.trim(),model:model.value.trim(),serial,cost:+cost.value,price:+price.value,purchaseDate:purchaseDate.value,warrantyMonths:+warrantyMonths.value||12,supplier:supplier.value.trim(),status:'in',saleDate:'',salePrice:0,customer:'',phone:''});e.target.reset();purchaseDate.value=today();warrantyMonths.value=12;save();alert('Đã nhập hàng vào kho.')};
+document.getElementById('saleForm').onsubmit=e=>{e.preventDefault();let p=data.find(x=>x.id==saleProduct.value);if(!p)return; p.status='sold';p.saleDate=saleDate.value;p.salePrice=+salePrice.value;p.customer=customer.value.trim();p.phone=phone.value.trim();e.target.reset();saleDate.value=today();save();alert('Đã ghi nhận bán hàng.')};
+document.getElementById('search').oninput=render;
+function render(){let q=(search.value||'').toLowerCase();let stock=data.filter(x=>x.status==='in');mStock.textContent=stock.length;mCost.textContent=money(stock.reduce((s,x)=>s+x.cost,0));mRevenue.textContent=money(data.filter(x=>x.status==='sold').reduce((s,x)=>s+x.salePrice,0));mProfit.textContent=money(data.filter(x=>x.status==='sold').reduce((s,x)=>s+x.salePrice-x.cost,0));
+list.innerHTML=data.filter(x=>[x.brand,x.model,x.serial].join(' ').toLowerCase().includes(q)).map(x=>'<div class="item"><div><b>'+x.brand+' '+x.model+'</b><br><small>'+x.serial+' · '+(x.status==='in'?'Trong kho':'Đã bán')+'</small></div><span class="badge '+(x.status==='in'?'ok':'')+'">'+(x.status==='in'?money(x.cost):money(x.salePrice))+'</span></div>').join('')||'<div class="empty">Chưa có hàng.</div>';
+saleProduct.innerHTML=stock.map(x=>'<option value="'+x.id+'">'+x.brand+' '+x.model+' · '+x.serial+'</option>').join('')||'<option>Kho đang trống</option>';
+let sold=data.filter(x=>x.status==='sold');warrantyList.innerHTML=sold.map(x=>{let end=new Date(x.saleDate);end.setMonth(end.getMonth()+x.warrantyMonths);let expired=end<new Date();return '<div class="item"><div><b>'+x.brand+' '+x.model+'</b><br><small>'+x.serial+' · '+(x.customer||'Chưa nhập khách')+' · '+(x.phone||'')+'</small></div><span class="badge '+(!expired?'ok':'')+'">'+(expired?'Hết hạn':'Còn BH')+' · '+end.toLocaleDateString('vi-VN')+'</span></div>'}).join('')||'<div class="empty">Chưa có sản phẩm đã bán.</div>';
+let cs=[...new Map(sold.filter(x=>x.phone||x.customer).map(x=>[x.phone||x.customer,x])).values()];customerList.innerHTML=cs.map(x=>'<div class="item"><div><b>'+x.customer+'</b><br><small>'+x.phone+'</small></div><span>'+x.brand+' '+x.model+'</span></div>').join('')||'<div class="empty">Chưa có khách hàng.</div>'}
+render();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
